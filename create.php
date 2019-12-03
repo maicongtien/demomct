@@ -39,11 +39,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Check input errors before inserting in database
     if(empty($name_err) && empty($address_err) && empty($salary_err)){
         // Prepare an insert statement
-        $sql = "INSERT INTO employees (name, address, salary) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO employees (name, address, salary) VALUES ('".$name."', '".$address."', ".$salary.")";
          
-        if($stmt = pg_prepare($link, $sql)){
+        /*if($stmt = pg_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            pg_query_params($stmt, "sss", $param_name, $param_address, $param_salary);
+            //pg_query_params
+			pg_send_query_params($stmt, "sss", $param_name, $param_address, $param_salary);
             
             // Set parameters
             $param_name = $name;
@@ -58,7 +59,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             } else{
                 echo "Something went wrong. Please try again later.";
             }
-        }
+        }*/
+		$results = pg_query($link, $sql) or die('Query failed: ' . pg_last_error());
+
+		if(!empty($results)) {
+			header("location: index.php");
+		}
+	
          
         // Close statement
         //mysqli_stmt_close($stmt);
