@@ -64,10 +64,11 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             }
         }*/
 	
-		$results = pg_query($conn, $sql) or die('Query failed: ' . pg_last_error());
+		$results = pg_query($link, $sql) or die('Query failed: ' . pg_last_error());
 		//$current_id = mysqli_insert_id($conn);
 		if(!empty($results)) {
-			$message = "New Employee Details are Added Successfully";
+			header("location: index.php");
+			exit();
 		}
          
         // Close statement
