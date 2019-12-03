@@ -1,50 +1,87 @@
-<?php
-require_once("db.php");
-$sql = "SELECT * FROM users ORDER BY userId DESC";
-//$result = mysqli_query($conn,$sql);
-$result = pg_query($conn, $sql) or die('Query failed: ' . pg_last_error());
-?>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>CRUD Operation</title>
-
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js"></script>
+    <style type="text/css">
+        .wrapper{
+            width: 650px;
+            margin: 0 auto;
+        }
+        .page-header h2{
+            margin-top: 0;
+        }
+        table tr td:last-child a{
+            margin-right: 15px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();   
+        });
+    </script>
 </head>
-<body style="background-color: yellow;font-family: sans-serif;">
-	<h2 style="text-align: center;">CRUD Operation using PHP MySQL</h2><br>
-<form name="frmUser" method="post" action="">
-<div class="message"><?php if(isset($message)) { echo $message; } ?></div>
-
-<table border="50" cellpadding="10" cellspacing="1" width="900" align="center">
-<tr style="color: white;font-weight: bold;background-color: blue">
-<td>Employee Name</td>
-<td>Designation</td>
-<td>Mobile Number</td>
-<td>Salary</td>
-<td>Actions</td>
-</tr>
-<?php
-
-$i=0;
-while($row = pg_fetch_array($result, NULL, PGSQL_ASSOC)) {
-	
-if($i%2==0)
-$classname="evenRow";
-else
-$classname="oddRow";
-?>
-<tr class="<?php if(isset($classname)) echo $classname;?>">
-<td><?php echo $row["employeename"]; ?></td>
-<td><?php echo $row["designation"]; ?></td>
-<td><?php echo $row["mobilenumber"]; ?></td>
-<td><?php echo $row["salary"]; ?></td>
-<td><a style="text-decoration: none;padding: 10px 15px;background-color: green;color: white;border-radius: 5px" href="edit_user.php?userId=<?php echo $row["userId"]; ?>">Edit</a> &nbsp; <a style="text-decoration: none;padding: 10px 15px;background-color: red;color: white;border-radius: 5px" href="delete_user.php?userId=<?php echo $row["userId"]; ?>">Delete</a></td>
-</tr>
-<?php
-$i++;
-}
-?>
-</table><br><br><br>
-<div style="text-align: center;"><button style="padding: 10px 15px;background-color: blue;border-radius: 5px;cursor: pointer;"><a href="add_user.php" style="text-decoration: none;color: white">Add New Employee</a></button></div>
-</form>
-</div>
-</body></html>
+<body>
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-header clearfix">
+                        <h2 class="pull-left">Employees Details</h2>
+                        <a href="create.php" class="btn btn-success pull-right">Add New Employee</a>
+                    </div>
+                    <?php
+                    // Include config file
+                    require_once "config.php";
+                    
+                    // Attempt select query execution
+                    $sql = "SELECT * FROM employees";
+                    if($result = pg_query($link, $sql)){
+                        if(pg_num_rows($result) > 0){
+                            echo "<table class='table table-bordered table-striped'>";
+                                echo "<thead>";
+                                    echo "<tr>";
+                                        echo "<th>#</th>";
+                                        echo "<th>Name</th>";
+                                        echo "<th>Address</th>";
+                                        echo "<th>Salary</th>";
+                                        echo "<th>Action</th>";
+                                    echo "</tr>";
+                                echo "</thead>";
+                                echo "<tbody>";
+                                while($row = pg_fetch_array($result)){
+                                    echo "<tr>";
+                                        echo "<td>" . $row['id'] . "</td>";
+                                        echo "<td>" . $row['name'] . "</td>";
+                                        echo "<td>" . $row['address'] . "</td>";
+                                        echo "<td>" . $row['salary'] . "</td>";
+                                        echo "<td>";
+                                            echo "<a href='read.php?id=". $row['id'] ."' title='View Record' data-toggle='tooltip'><span class='glyphicon glyphicon-eye-open'></span></a>";
+                                            echo "<a href='update.php?id=". $row['id'] ."' title='Update Record' data-toggle='tooltip'><span class='glyphicon glyphicon-pencil'></span></a>";
+                                            echo "<a href='delete.php?id=". $row['id'] ."' title='Delete Record' data-toggle='tooltip'><span class='glyphicon glyphicon-trash'></span></a>";
+                                        echo "</td>";
+                                    echo "</tr>";
+                                }
+                                echo "</tbody>";                            
+                            echo "</table>";
+                            // Free result set
+                            pg_free_result($result);
+                        } else{
+                            echo "<p class='lead'><em>No records were found.</em></p>";
+                        }
+                    } else{
+                        echo "ERROR: Could not able to execute $sql. " . pg_last_error($link);
+                    }
+ 
+                    // Close connection
+                    pg_close($link);
+                    ?>
+                </div>
+            </div>        
+        </div>
+    </div>
+</body>
+</html>
