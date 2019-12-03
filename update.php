@@ -42,9 +42,9 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     // Check input errors before inserting in database
     if(empty($name_err) && empty($address_err) && empty($salary_err)){
         // Prepare an update statement
-        $sql = "UPDATE employees SET name=?, address=?, salary=? WHERE id=?";
+        $sql = "UPDATE employees SET name='".$name."', address='".$address."', salary=".$salary." WHERE id=".$id."";
          
-        if($stmt = mysqli_prepare($link, $sql)){
+        /*if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "sssi", $param_name, $param_address, $param_salary, $param_id);
             
@@ -62,7 +62,13 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             } else{
                 echo "Something went wrong. Please try again later.";
             }
-        }
+        }*/
+	
+		$results = pg_query($conn, $sql) or die('Query failed: ' . pg_last_error());
+		//$current_id = mysqli_insert_id($conn);
+		if(!empty($results)) {
+			$message = "New Employee Details are Added Successfully";
+		}
          
         // Close statement
         mysqli_stmt_close($stmt);
