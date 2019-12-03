@@ -15,9 +15,9 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
 		$row = pg_fetch_array($result, 0, PGSQL_NUM);
 		
 		// Retrieve individual field value
-		$name = $row["name"];
-		$address = $row["address"];
-		$salary = $row["salary"];
+		$name = $row[1];
+		$address = $row[2];
+		$salary = $row[3];
 	} else{
 		// URL doesn't contain valid id parameter. Redirect to error page
 		header("location: error.php");
