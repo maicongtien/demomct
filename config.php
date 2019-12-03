@@ -1,10 +1,9 @@
 <?php
-/* Database credentials. Assuming you are running MySQL
-server with default setting (user 'root' with no password) */
-define('DB_SERVER', 'ec2-184-73-209-230.compute-1.amazonaws.com');
-define('DB_USERNAME', 'mtycxjjccxmeee');
-define('DB_PASSWORD', 'f0dd25aaa62a3a7a83d3934915c681f6ddfac747814e5a3668945ea34017c6ce');
-define('DB_NAME', 'd35915da8p1v65');
+
+define('DB_SERVER', 'ec2-174-129-220-12.compute-1.amazonaws.com');
+define('DB_USERNAME', 'juxilfxgkkpcew');
+define('DB_PASSWORD', '05e5b6f59a768f05287a64b42b44d45da5fb69e7571c73b6254f777b4efbbd81');
+define('DB_NAME', 'daak2jhu7qfbn7');
  
 /* Attempt to connect to MySQL database */
 $link = pg_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
