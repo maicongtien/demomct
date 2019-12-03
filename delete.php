@@ -5,9 +5,9 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
     require_once "config.php";
     
     // Prepare a delete statement
-    $sql = "DELETE FROM employees WHERE id = ?";
+    $sql = "DELETE FROM employees WHERE id = ".trim($_POST["id"])."";
     
-    if($stmt = mysqli_prepare($link, $sql)){
+    /*if($stmt = mysqli_prepare($link, $sql)){
         // Bind variables to the prepared statement as parameters
         mysqli_stmt_bind_param($stmt, "i", $param_id);
         
@@ -23,12 +23,18 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
             echo "Oops! Something went wrong. Please try again later.";
         }
     }
+	*/
+	$results = pg_query($link, $sql) or die('Query failed: ' . pg_last_error());
+
+	if(!empty($results)) {
+		header("location: index.php");
+	}
      
     // Close statement
-    mysqli_stmt_close($stmt);
+    //mysqli_stmt_close($stmt);
     
     // Close connection
-    mysqli_close($link);
+    pg_close($link);
 } else{
     // Check existence of id parameter
     if(empty(trim($_GET["id"]))){

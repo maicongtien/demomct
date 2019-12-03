@@ -5,9 +5,26 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
     require_once "config.php";
     
     // Prepare a select statement
-    $sql = "SELECT * FROM employees WHERE id = ?";
+    $sql = "SELECT * FROM employees WHERE id = ".trim($_GET["id"])."";
     
-    if($stmt = mysqli_prepare($link, $sql)){
+	$result = pg_query($link, $sql) or die('Query failed: ' . pg_last_error());
+
+	if(pg_num_rows($result) == 1){
+		/* Fetch result row as an associative array. Since the result set
+		contains only one row, we don't need to use while loop */
+		$row = pg_fetch_array($result, 0, PGSQL_NUM);
+		
+		// Retrieve individual field value
+		$name = $row["name"];
+		$address = $row["address"];
+		$salary = $row["salary"];
+	} else{
+		// URL doesn't contain valid id parameter. Redirect to error page
+		header("location: error.php");
+		exit();
+	}
+	
+    /*if($stmt = mysqli_prepare($link, $sql)){
         // Bind variables to the prepared statement as parameters
         mysqli_stmt_bind_param($stmt, "i", $param_id);
         
@@ -19,8 +36,8 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
             $result = mysqli_stmt_get_result($stmt);
     
             if(mysqli_num_rows($result) == 1){
-                /* Fetch result row as an associative array. Since the result set
-                contains only one row, we don't need to use while loop */
+                //Fetch result row as an associative array. Since the result set
+                //contains only one row, we don't need to use while loop 
                 $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
                 
                 // Retrieve individual field value
@@ -40,6 +57,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
      
     // Close statement
     mysqli_stmt_close($stmt);
+	*/
     
     // Close connection
     mysqli_close($link);
