@@ -3,8 +3,8 @@ CREATE TABLE users (
   employeename varchar(100) NOT NULL,
   designation varchar(100) NOT NULL,
   mobilenumber varchar(250) NOT NULL,
-  salary NOT NULL
-) 
+  salary int NOT NULL
+) ;
 
 
   
