@@ -44,25 +44,7 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
         // Prepare an update statement
         $sql = "UPDATE employees SET name='".$name."', address='".$address."', salary=".$salary." WHERE id=".$id."";
          
-        /*if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sssi", $param_name, $param_address, $param_salary, $param_id);
-            
-            // Set parameters
-            $param_name = $name;
-            $param_address = $address;
-            $param_salary = $salary;
-            $param_id = $id;
-            
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                // Records updated successfully. Redirect to landing page
-                header("location: index.php");
-                exit();
-            } else{
-                echo "Something went wrong. Please try again later.";
-            }
-        }*/
+        
 	
 		$results = pg_query($link, $sql) or die('Query failed: ' . pg_last_error());
 		//$current_id = mysqli_insert_id($conn);
@@ -70,13 +52,10 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
 			header("location: index.php");
 			exit();
 		}
-         
-        // Close statement
-        //mysqli_stmt_close($stmt);
     }
     
     // Close connection
-    //mysqli_close($link);
+    pg_close($link);
 } else{
     // Check existence of id parameter before processing further
     if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
@@ -102,40 +81,6 @@ if(isset($_POST["id"]) && !empty($_POST["id"])){
 			header("location: error.php");
 			exit();
 		}
-	
-        /*if($stmt = mysqli_prepare($link, $sql)){
-            // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "i", $param_id);
-            
-            // Set parameters
-            $param_id = $id;
-            
-            // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
-                $result = mysqli_stmt_get_result($stmt);
-    
-                if(mysqli_num_rows($result) == 1){
-                    // Fetch result row as an associative array. Since the result set
-                    //contains only one row, we don't need to use while loop 
-                    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-                    
-                    // Retrieve individual field value
-                    $name = $row["name"];
-                    $address = $row["address"];
-                    $salary = $row["salary"];
-                } else{
-                    // URL doesn't contain valid id. Redirect to error page
-                    header("location: error.php");
-                    exit();
-                }
-                
-            } else{
-                echo "Oops! Something went wrong. Please try again later.";
-            }
-        }
-        */
-        // Close statement
-        //mysqli_stmt_close($stmt);
         
         // Close connection
         pg_close($link);
