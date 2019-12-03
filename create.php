@@ -41,9 +41,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // Prepare an insert statement
         $sql = "INSERT INTO employees (name, address, salary) VALUES (?, ?, ?)";
          
-        if($stmt = mysqli_prepare($link, $sql)){
+        if($stmt = pg_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sss", $param_name, $param_address, $param_salary);
+            pg_query_params($stmt, "sss", $param_name, $param_address, $param_salary);
             
             // Set parameters
             $param_name = $name;
@@ -51,7 +51,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_salary = $salary;
             
             // Attempt to execute the prepared statement
-            if(mysqli_stmt_execute($stmt)){
+            if(pg_query($stmt)){
                 // Records created successfully. Redirect to landing page
                 header("location: index.php");
                 exit();
@@ -61,11 +61,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
          
         // Close statement
-        mysqli_stmt_close($stmt);
+        //mysqli_stmt_close($stmt);
     }
     
     // Close connection
-    mysqli_close($link);
+    pg_close($link);
 }
 ?>
  
